@@ -72,6 +72,47 @@ export type Database = {
           created_at?: string;
         };
       };
+      blog_posts: {
+        Row: {
+          id: string;
+          title: string;
+          slug: string;
+          excerpt: string;
+          content: string;
+          tags: string[];
+          featured: boolean;
+          published: boolean;
+          read_time: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          slug: string;
+          excerpt: string;
+          content: string;
+          tags?: string[];
+          featured?: boolean;
+          published?: boolean;
+          read_time?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          slug?: string;
+          excerpt?: string;
+          content?: string;
+          tags?: string[];
+          featured?: boolean;
+          published?: boolean;
+          read_time?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
   };
 };

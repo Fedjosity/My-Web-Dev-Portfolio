@@ -18,6 +18,20 @@ export interface Project {
   created_at: string;
 }
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  tags: string[];
+  featured: boolean;
+  published: boolean;
+  read_time: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export type NewProjectInput = {
   title: string;
   description: string;
@@ -26,4 +40,15 @@ export type NewProjectInput = {
   github_link: string;
   image_url: string;
   tags: string;
+};
+
+export type NewBlogPostInput = {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  tags: string;
+  featured: boolean;
+  published: boolean;
+  read_time: number;
 };

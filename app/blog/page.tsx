@@ -1,63 +1,83 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
-
-// Mock blog posts - in a real app, these would come from a CMS or markdown files
-const blogPosts = [
-  {
-    id: "1",
-    title: "Building Modern Web Apps with Next.js 14",
-    excerpt:
-      "Exploring the latest features in Next.js 14 and how they improve developer experience and application performance.",
-    content: "Full blog post content would go here...",
-    date: "2024-01-15",
-    readTime: "5 min read",
-    tags: ["Next.js", "React", "Web Development"],
-    featured: true,
-  },
-  {
-    id: "2",
-    title: "The Power of TypeScript in Large Applications",
-    excerpt:
-      "How TypeScript helps maintain code quality and prevents bugs in large-scale applications.",
-    content: "Full blog post content would go here...",
-    date: "2024-01-10",
-    readTime: "7 min read",
-    tags: ["TypeScript", "JavaScript", "Development"],
-    featured: false,
-  },
-  {
-    id: "3",
-    title: "Optimizing React Performance with Modern Techniques",
-    excerpt:
-      "Best practices for keeping your React applications fast and responsive.",
-    content: "Full blog post content would go here...",
-    date: "2024-01-05",
-    readTime: "6 min read",
-    tags: ["React", "Performance", "Optimization"],
-    featured: false,
-  },
-  {
-    id: "4",
-    title: "CSS-in-JS vs Tailwind CSS: A Developer's Perspective",
-    excerpt:
-      "Comparing different styling approaches and their trade-offs in modern web development.",
-    content: "Full blog post content would go here...",
-    date: "2024-01-01",
-    readTime: "4 min read",
-    tags: ["CSS", "Tailwind", "Styling"],
-    featured: false,
-  },
-];
+import type { BlogPost } from "../../types/admin-types";
 
 export default function BlogPage() {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchBlogPosts = async () => {
+      try {
+        const response = await fetch("/api/blog/posts");
+        if (!response.ok) {
+          throw new Error("Failed to fetch blog posts");
+        }
+        const data = await response.json();
+        // Filter to only show published posts on the frontend
+        const publishedPosts = data.filter((post: BlogPost) => post.published);
+        setBlogPosts(publishedPosts);
+      } catch (err: any) {
+        console.error("Error fetching blog posts:", err);
+        setError(err.message || "Failed to load blog posts");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogPosts();
+  }, []);
+
   const featuredPost = blogPosts.find((post) => post.featured);
   const regularPosts = blogPosts.filter((post) => !post.featured);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-20">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center mb-12">
+            <div className="h-8 bg-muted rounded mb-4 animate-pulse" />
+            <div className="h-4 bg-muted rounded w-2/3 mx-auto animate-pulse" />
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Card key={i} className="animate-pulse">
+                <CardContent className="p-6">
+                  <div className="h-4 bg-muted rounded mb-2" />
+                  <div className="h-6 bg-muted rounded mb-4" />
+                  <div className="h-20 bg-muted rounded" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen pt-20">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4">Blog & Notes</h1>
+            <p className="text-muted-foreground mb-8">
+              Sorry, we couldn&apos;t load the blog posts at the moment.
+            </p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20">
@@ -93,20 +113,19 @@ export default function BlogPage() {
                   <CardHeader>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                       <Calendar className="h-4 w-4" />
-                      {new Date(featuredPost.date).toLocaleDateString()}
+                      {new Date(featuredPost.created_at).toLocaleDateString()}
                       <Clock className="h-4 w-4 ml-2" />
-                      {featuredPost.readTime}
+                      {featuredPost.read_time} min read
                     </div>
                     <CardTitle className="text-2xl mb-2">
                       {featuredPost.title}
                     </CardTitle>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {Array.isArray(featuredPost.tags) &&
-                        featuredPost.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary">
-                            {tag}
-                          </Badge>
-                        ))}
+                      {featuredPost.tags.map((tag) => (
+                        <Badge key={tag} variant="secondary">
+                          {tag}
+                        </Badge>
+                      ))}
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -114,7 +133,7 @@ export default function BlogPage() {
                       {featuredPost.excerpt}
                     </p>
                     <Button asChild>
-                      <Link href={`/blog/${featuredPost.id}`}>
+                      <Link href={`/blog/${featuredPost.slug}`}>
                         Read More
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
@@ -133,33 +152,44 @@ export default function BlogPage() {
           transition={{ delay: 0.2 }}
         >
           <h2 className="text-2xl font-bold mb-6">Recent Posts</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {regularPosts.map((post, index) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="h-full border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/50 transition-colors group">
-                  <CardHeader>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                      <Calendar className="h-4 w-4" />
-                      {new Date(post.date).toLocaleDateString()}
-                      <Clock className="h-4 w-4 ml-2" />
-                      {post.readTime}
-                    </div>
-                    <CardTitle className="group-hover:text-primary transition-colors">
-                      <Link href={`/blog/${post.id}`}>{post.title}</Link>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {Array.isArray(post.tags) &&
-                        post.tags.map((tag) => (
+          {regularPosts.length === 0 ? (
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+              <CardContent className="p-8 text-center">
+                <p className="text-muted-foreground mb-4">
+                  No blog posts available yet.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Check back soon for new content!
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {regularPosts.map((post, index) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="h-full border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/50 transition-colors group">
+                    <CardHeader>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                        <Calendar className="h-4 w-4" />
+                        {new Date(post.created_at).toLocaleDateString()}
+                        <Clock className="h-4 w-4 ml-2" />
+                        {post.read_time} min read
+                      </div>
+                      <CardTitle className="group-hover:text-primary transition-colors">
+                        <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4 line-clamp-3">
+                        {post.excerpt}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {post.tags.map((tag) => (
                           <Badge
                             key={tag}
                             variant="outline"
@@ -168,18 +198,19 @@ export default function BlogPage() {
                             {tag}
                           </Badge>
                         ))}
-                    </div>
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link href={`/blog/${post.id}`}>
-                        Read More
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                      </div>
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link href={`/blog/${post.slug}`}>
+                          Read More
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Coming Soon */}
@@ -193,7 +224,7 @@ export default function BlogPage() {
             <CardContent className="p-8">
               <h3 className="text-xl font-semibold mb-2">More Coming Soon</h3>
               <p className="text-muted-foreground mb-4">
-                I'm constantly writing about new technologies and sharing
+                I&apos;m constantly writing about new technologies and sharing
                 insights from my development journey. Check back regularly for
                 new content!
               </p>

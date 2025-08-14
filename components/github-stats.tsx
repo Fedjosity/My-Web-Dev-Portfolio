@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { GitHubContributions } from "@/components/github-contributions";
 import { GitFork, Star, Users, GitCommit } from "lucide-react";
-// Use server API route to avoid client rate limits/CORS
 
 interface GitHubStats {
   totalRepos: number;
@@ -32,8 +31,7 @@ export function GitHubStats() {
         if (!res.ok) throw new Error("Failed to load stats");
         const githubStats = await res.json();
         setStats(githubStats);
-        // If weeks are present, render contributions inline by updating DOM via stateful child
-        // We will pass weeks to GitHubContributions below
+        // Store contribution weeks for the contributions component
         (window as any).__CONTRIB_WEEKS__ =
           githubStats.contributionsWeeks || [];
       } catch (error) {
@@ -55,15 +53,23 @@ export function GitHubStats() {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardContent className="p-6">
-              <div className="h-6 bg-muted rounded mb-2" />
-              <div className="h-8 bg-muted rounded" />
-            </CardContent>
-          </Card>
-        ))}
+      <div className="space-y-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardContent className="p-6">
+                <div className="h-6 bg-muted rounded mb-2" />
+                <div className="h-8 bg-muted rounded" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Card className="animate-pulse">
+          <CardContent className="p-6">
+            <div className="h-4 bg-muted rounded mb-4 w-1/3" />
+            <div className="h-32 bg-muted rounded" />
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -87,7 +93,7 @@ export function GitHubStats() {
                     animate={{ opacity: 1 }}
                     transition={{ delay: index * 0.1 + 0.5 }}
                   >
-                    {item.value}
+                    {item.value.toLocaleString()}
                   </motion.span>
                 </div>
                 <div className="text-sm text-muted-foreground">
@@ -98,18 +104,21 @@ export function GitHubStats() {
           </motion.div>
         ))}
       </div>
-      <GitHubContributions
-        username={process.env.NEXT_PUBLIC_GITHUB_USERNAME || "fedjosity"}
-        weeks={
-          (typeof window !== "undefined" &&
-            (window as any).__CONTRIB_WEEKS__) ||
-          []
-        }
-      />
-      <div className="text-center text-sm text-muted-foreground">
-        Contributions in the last 12 months:{" "}
-        {stats.contributionsThisYear.toLocaleString()}
-      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+      >
+        <GitHubContributions
+          username={process.env.NEXT_PUBLIC_GITHUB_USERNAME || "fedjosity"}
+          weeks={
+            (typeof window !== "undefined" &&
+              (window as any).__CONTRIB_WEEKS__) ||
+            []
+          }
+        />
+      </motion.div>
     </div>
   );
 }

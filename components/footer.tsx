@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Github, Linkedin, Mail, ArrowUpRight } from "lucide-react";
+import { Github, Linkedin, ArrowUpRight } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -10,11 +11,15 @@ export function Footer() {
   const links = [
     { href: "https://github.com/fedjosity", label: "GitHub", icon: Github },
     {
-      href: "https://linkedin.com/in/fedjost-ayomide",
+      href: "https://www.linkedin.com/in/fedjostayomide",
       label: "LinkedIn",
       icon: Linkedin,
     },
-    { href: "/contact", label: "Contact", icon: Mail },
+    {
+      href: "https://wa.me/2348167568818",
+      label: "WhatsApp",
+      icon: FaWhatsapp,
+    },
   ];
 
   return (

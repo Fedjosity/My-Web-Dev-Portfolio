@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, MapPin, Phone, Github, Linkedin, Twitter } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -82,9 +83,9 @@ export default function ContactPage() {
       href: "https://www.linkedin.com/in/fedjost-ayomide-0579b4338",
     },
     {
-      icon: Twitter,
-      label: "Twitter",
-      href: "https://twitter.com/fedjosity",
+      href: "https://wa.me/2348167568818",
+      label: "WhatsApp",
+      icon: FaWhatsapp,
     },
   ];
 

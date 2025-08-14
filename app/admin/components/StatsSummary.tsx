@@ -1,21 +1,25 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Plus, Calendar } from "lucide-react";
+import { Mail, Plus, Calendar, FileText, Edit } from "lucide-react";
 
 type Props = {
   totalMessages: number;
   totalProjects: number;
   messagesThisWeek: number;
+  publishedPosts?: number;
+  draftPosts?: number;
 };
 
 export default function StatsSummary({
   totalMessages,
   totalProjects,
   messagesThisWeek,
+  publishedPosts = 0,
+  draftPosts = 0,
 }: Props) {
   return (
-    <div className="grid md:grid-cols-3 gap-6 mb-8">
+    <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
       <Card>
         <CardContent className="p-6">
           <div className="flex items-center gap-4">
@@ -52,7 +56,37 @@ export default function StatsSummary({
             </div>
             <div>
               <p className="text-2xl font-bold">{messagesThisWeek}</p>
-              <p className="text-muted-foreground text-sm">This Week</p>
+              <p className="text-muted-foreground text-sm">
+                Messages This Week
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center">
+              <FileText className="h-6 w-6 text-orange-500" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold">{publishedPosts}</p>
+              <p className="text-muted-foreground text-sm">Published Posts</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-yellow-500/10 flex items-center justify-center">
+              <Edit className="h-6 w-6 text-yellow-500" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold">{draftPosts}</p>
+              <p className="text-muted-foreground text-sm">Draft Posts</p>
             </div>
           </div>
         </CardContent>

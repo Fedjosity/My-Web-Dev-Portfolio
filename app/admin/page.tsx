@@ -11,17 +11,16 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import StatsSummary from "./components/StatsSummary";
 import TabsContainer from "./components/TabsContainer";
-import type { Contact, Project } from "../../types/admin-types";
+import type { Contact, Project, BlogPost } from "../../types/admin-types";
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  // Page-local state only
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +53,27 @@ export default function AdminPage() {
 
       if (projectsError) throw projectsError;
       setProjects(projectsData || []);
+
+      // Fetch blog posts using API route (includes unpublished for admin)
+      try {
+        const response = await fetch("/api/blog/posts");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const blogPostsData = await response.json();
+        console.log("Blog posts fetched:", blogPostsData);
+        setBlogPosts(blogPostsData || []);
+      } catch (apiError) {
+        console.error("API fetch error:", apiError);
+        // Fallback to direct Supabase call
+        const { data: blogPostsData, error: blogPostsError } = await supabase
+          .from("blog_posts")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (blogPostsError) throw blogPostsError;
+        setBlogPosts(blogPostsData || []);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch data");
@@ -117,6 +137,9 @@ export default function AdminPage() {
       new Date(c.created_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
   ).length;
 
+  const publishedPosts = blogPosts.filter((post) => post.published).length;
+  const draftPosts = blogPosts.filter((post) => !post.published).length;
+
   return (
     <div className="min-h-screen pt-20">
       <div className="container mx-auto px-4 py-8">
@@ -127,7 +150,8 @@ export default function AdminPage() {
         >
           <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
           <p className="text-muted-foreground">
-            Manage your portfolio content and view contact submissions
+            Manage your portfolio content, blog posts, and view contact
+            submissions
           </p>
         </motion.div>
 
@@ -140,12 +164,15 @@ export default function AdminPage() {
             totalMessages={contacts.length}
             totalProjects={projects.length}
             messagesThisWeek={messagesThisWeek}
+            publishedPosts={publishedPosts}
+            draftPosts={draftPosts}
           />
         </motion.div>
 
         <TabsContainer
           projects={projects}
           contacts={contacts}
+          blogPosts={blogPosts}
           onRefresh={fetchData}
         />
       </div>
