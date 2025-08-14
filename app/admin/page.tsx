@@ -1,0 +1,154 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Eye, EyeOff } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+import StatsSummary from "./components/StatsSummary";
+import TabsContainer from "./components/TabsContainer";
+import type { Contact, Project } from "../../types/admin-types";
+
+export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Page-local state only
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === "2004") {
+      setIsAuthenticated(true);
+      toast.success("Welcome to the admin panel!");
+      fetchData();
+    } else {
+      toast.error("Invalid password");
+    }
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      // Fetch contacts
+      const { data: contactsData, error: contactsError } = await supabase
+        .from("contacts")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (contactsError) throw contactsError;
+      setContacts(contactsData || []);
+
+      // Fetch projects
+      const { data: projectsData, error: projectsError } = await supabase
+        .from("projects")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (projectsError) throw projectsError;
+      setProjects(projectsData || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast.error("Failed to fetch data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Card className="w-full max-w-md mx-4">
+            <CardHeader>
+              <CardTitle className="text-center">Admin Login</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      placeholder="Enter admin password"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 h-auto p-1"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                <Button type="submit" className="w-full">
+                  Login
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
+
+  const messagesThisWeek = contacts.filter(
+    (c) =>
+      new Date(c.created_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  ).length;
+
+  return (
+    <div className="min-h-screen pt-20">
+      <div className="container mx-auto px-4 py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
+          <p className="text-muted-foreground">
+            Manage your portfolio content and view contact submissions
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <StatsSummary
+            totalMessages={contacts.length}
+            totalProjects={projects.length}
+            messagesThisWeek={messagesThisWeek}
+          />
+        </motion.div>
+
+        <TabsContainer
+          projects={projects}
+          contacts={contacts}
+          onRefresh={fetchData}
+        />
+      </div>
+    </div>
+  );
+}
