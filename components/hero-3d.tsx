@@ -2,7 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Text, OrbitControls, Float } from "@react-three/drei";
+import { Text, Float } from "@react-three/drei";
 import * as THREE from "three";
 
 function FloatingCode() {
@@ -25,32 +25,34 @@ function FloatingCode() {
     }));
   }, [symbols]);
 
+  // Falling stardust effect: symbols drift downward and respawn above
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime) * 0.1;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.2;
-    }
+    if (!meshRef.current) return;
+    const delta = state.clock.getDelta();
+    const group = meshRef.current;
+    group.children.forEach((child, idx) => {
+      if (idx === 0) return; // keep center symbol stationary
+      const speed = items[idx - 1]?.speed || 0.3;
+      child.position.y -= speed * delta * 2.8;
+      child.position.x += Math.sin(state.clock.elapsedTime + idx) * 0.003;
+      if (child.position.y < -6) {
+        child.position.y = 6 + Math.random() * 2;
+        child.position.x = (Math.random() - 0.5) * 8;
+        child.position.z = (Math.random() - 0.5) * 6;
+      }
+    });
   });
 
   return (
     <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.5}>
       <group ref={meshRef}>
-        <Text
-          fontSize={1.5}
-          color="#3b82f6"
-          font="/fonts/Inter-Bold.woff"
-          position={[0, 0, 0]}
-        >
+        <Text fontSize={1.5} color="#3b82f6" position={[0, 0, 0]}>
           {"</>"}
         </Text>
         {/* Floating programming symbols instead of particles */}
         {items.map((it, i) => (
           <group key={i} position={it.position.toArray()}>
-            <Text
-              fontSize={it.size}
-              color={it.color}
-              font="/fonts/Inter-Bold.woff"
-            >
+            <Text fontSize={it.size} color={it.color}>
               {it.symbol}
             </Text>
           </group>
@@ -64,10 +66,9 @@ export function Hero3D() {
   return (
     <div className="w-full h-full">
       <Canvas camera={{ position: [0, 0, 8] }} className="w-full h-full">
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
+        <ambientLight intensity={0.6} />
+        <pointLight position={[10, 12, 8]} intensity={0.9} />
         <FloatingCode />
-        <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} />
       </Canvas>
     </div>
   );

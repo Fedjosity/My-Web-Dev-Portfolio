@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const techStack = [
-  { name: 'React/Next.js', level: 95, color: '#61dafb' },
-  { name: 'TypeScript', level: 90, color: '#3178c6' },
-  { name: 'Tailwind CSS', level: 92, color: '#38bdf8' },
-  { name: 'Node.js', level: 85, color: '#339933' },
-  { name: 'Python', level: 80, color: '#3776ab' },
-  { name: 'PostgreSQL', level: 78, color: '#336791' },
-]
+  { name: "React/Next.js", level: 95, color: "#61dafb" },
+  { name: "TypeScript", level: 90, color: "#3178c6" },
+  { name: "Tailwind CSS", level: 92, color: "#38bdf8" },
+  { name: "Node.js", level: 85, color: "#339933" },
+  { name: "Supabase", level: 80, color: "#3776ab" },
+  { name: "Framer Motion", level: 78, color: "#336791" },
+];
 
 export function TechStackChart() {
   return (
@@ -34,7 +34,7 @@ export function TechStackChart() {
                 transition={{
                   delay: index * 0.1,
                   duration: 1,
-                  ease: 'easeOut',
+                  ease: "easeOut",
                 }}
               />
             </div>
@@ -42,5 +42,5 @@ export function TechStackChart() {
         ))}
       </CardContent>
     </Card>
-  )
+  );
 }

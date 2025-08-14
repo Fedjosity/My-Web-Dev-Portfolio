@@ -1,46 +1,44 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Mail, MapPin, Phone, Github, Linkedin, Twitter } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Mail, MapPin, Phone, Github, Linkedin, Twitter } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  })
-  const [loading, setLoading] = useState(false)
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
       // Insert into Supabase
-      const { error } = await supabase
-        .from('contacts')
-        .insert([formData])
+      const { error } = await supabase.from("contacts").insert([formData]);
 
-      if (error) throw error
+      if (error) throw error;
 
       // Reset form
-      setFormData({ name: '', email: '', message: '' })
-      toast.success('Message sent successfully! I\'ll get back to you soon.')
+      setFormData({ name: "", email: "", message: "" });
+      toast.success("Message sent successfully! I'll get back to you soon.");
     } catch (error) {
-      console.error('Error sending message:', error)
-      toast.error('Failed to send message. Please try again.')
+      console.error("Error sending message:", error);
+      toast.error("Failed to send message. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -48,47 +46,47 @@ export default function ContactPage() {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   const contactInfo = [
     {
       icon: Mail,
-      label: 'Email',
-      value: 'fedjost.ayomide@gmail.com',
-      href: 'mailto:fedjost.ayomide@gmail.com',
+      label: "Email",
+      value: "fedjostayomide@gmail.com",
+      href: "mailto:fedjostayomide@gmail.com",
     },
     {
       icon: MapPin,
-      label: 'Location',
-      value: 'Lagos, Nigeria',
+      label: "Location",
+      value: "Abuja, Nigeria",
       href: null,
     },
     {
       icon: Phone,
-      label: 'Phone',
-      value: '+234 (0) 123 456 7890',
-      href: 'tel:+2341234567890',
+      label: "Phone",
+      value: "+234 816 756 8818",
+      href: "tel:+2348167568818",
     },
-  ]
+  ];
 
   const socialLinks = [
     {
       icon: Github,
-      label: 'GitHub',
-      href: 'https://github.com/fedjosity',
+      label: "GitHub",
+      href: "https://github.com/fedjosity",
     },
     {
       icon: Linkedin,
-      label: 'LinkedIn',
-      href: 'https://linkedin.com/in/fedjost-ayomide',
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/fedjost-ayomide-0579b4338",
     },
     {
       icon: Twitter,
-      label: 'Twitter',
-      href: 'https://twitter.com/fedjosity',
+      label: "Twitter",
+      href: "https://twitter.com/fedjosity",
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen pt-20">
@@ -100,8 +98,8 @@ export default function ContactPage() {
         >
           <h1 className="text-4xl font-bold mb-4">Get In Touch</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Have a project in mind or want to collaborate? I'd love to hear from you. 
-            Send me a message and I'll get back to you as soon as possible.
+            Have a project in mind or want to collaborate? I'd love to hear from
+            you. Send me a message and I'll get back to you as soon as possible.
           </p>
         </motion.div>
 
@@ -157,7 +155,7 @@ export default function ContactPage() {
                   </div>
 
                   <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? 'Sending...' : 'Send Message'}
+                    {loading ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </CardContent>
@@ -230,10 +228,9 @@ export default function ContactPage() {
               <CardContent className="p-6">
                 <h3 className="font-semibold mb-2">Let's Work Together</h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  I'm currently available for freelance projects and 
-                  full-time opportunities. Whether you have a specific 
-                  project in mind or just want to chat about technology, 
-                  feel free to reach out.
+                  I'm currently available for freelance projects and full-time
+                  opportunities. Whether you have a specific project in mind or
+                  just want to chat about technology, feel free to reach out.
                 </p>
                 <p className="text-muted-foreground text-sm">
                   Response time: Usually within 24 hours
@@ -244,5 +241,5 @@ export default function ContactPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

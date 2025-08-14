@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { GitHubContributions } from "@/components/github-contributions";
 import { GitFork, Star, Users, GitCommit } from "lucide-react";
-import { getGitHubStats } from "@/lib/github";
+// Use server API route to avoid client rate limits/CORS
 
 interface GitHubStats {
   totalRepos: number;
@@ -28,8 +28,14 @@ export function GitHubStats() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const githubStats = await getGitHubStats();
+        const res = await fetch("/api/github/stats", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to load stats");
+        const githubStats = await res.json();
         setStats(githubStats);
+        // If weeks are present, render contributions inline by updating DOM via stateful child
+        // We will pass weeks to GitHubContributions below
+        (window as any).__CONTRIB_WEEKS__ =
+          githubStats.contributionsWeeks || [];
       } catch (error) {
         console.error("Error fetching GitHub stats:", error);
       } finally {
@@ -94,7 +100,16 @@ export function GitHubStats() {
       </div>
       <GitHubContributions
         username={process.env.NEXT_PUBLIC_GITHUB_USERNAME || "fedjosity"}
+        weeks={
+          (typeof window !== "undefined" &&
+            (window as any).__CONTRIB_WEEKS__) ||
+          []
+        }
       />
+      <div className="text-center text-sm text-muted-foreground">
+        Contributions in the last 12 months:{" "}
+        {stats.contributionsThisYear.toLocaleString()}
+      </div>
     </div>
   );
 }

@@ -9,13 +9,23 @@ type Day = {
   level: number;
 };
 
-export function GitHubContributions({ username }: { username: string }) {
-  const [weeks, setWeeks] = useState<Day[][]>([]);
+export function GitHubContributions({
+  username,
+  weeks: weeksProp = [] as Day[][],
+}: {
+  username: string;
+  weeks?: Day[][];
+}) {
+  const [weeks, setWeeks] = useState<Day[][]>(weeksProp);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchContrib = async () => {
       try {
+        if (weeksProp && weeksProp.length > 0) {
+          setWeeks(weeksProp);
+          return;
+        }
         const res = await fetch(
           `/api/github/contributions?username=${encodeURIComponent(username)}`
         );
@@ -27,22 +37,19 @@ export function GitHubContributions({ username }: { username: string }) {
       }
     };
     fetchContrib();
-  }, [username]);
+  }, [username, weeksProp]);
 
-  if (error) {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <p className="text-sm text-muted-foreground">{error}</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const showError = error && weeks.length === 0;
 
   return (
     <Card>
       <CardContent className="p-6">
         <div className="overflow-x-auto">
+          {showError && (
+            <p className="text-xs text-destructive mb-3">
+              {error}. Showing nothing because both GitHub and fallback failed.
+            </p>
+          )}
           <div
             className="grid"
             style={{ gridTemplateColumns: `repeat(${weeks.length}, 12px)` }}
