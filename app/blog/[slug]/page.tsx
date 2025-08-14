@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { useRouter } from "next/navigation";
 import type { BlogPost } from "../../../types/admin-types";
 
 interface BlogPostPageProps {
@@ -20,13 +20,15 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBlogPost = async () => {
       try {
         const response = await fetch(`/api/blog/posts/${params.slug}`);
         if (response.status === 404) {
-          notFound();
+          router.push("/404");
+          return;
         }
         if (!response.ok) {
           throw new Error("Failed to fetch blog post");
@@ -42,7 +44,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     };
 
     fetchBlogPost();
-  }, [params.slug]);
+  }, [params.slug, router]);
 
   const handleShare = async () => {
     if (navigator.share) {
