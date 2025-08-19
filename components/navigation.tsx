@@ -1,32 +1,32 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { ThemeToggle } from './theme-toggle'
-import { Menu, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { ThemeToggle } from "./theme-toggle";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Contact' },
-]
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Projects" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Contact" },
+];
 
 export function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <motion.header
@@ -34,8 +34,8 @@ export function Navigation() {
       animate={{ y: 0 }}
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-background/80 backdrop-blur-md border-b border-border'
-          : 'bg-transparent'
+          ? "bg-background/80 backdrop-blur-md border-b border-border"
+          : "bg-transparent"
       }`}
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,7 +44,7 @@ export function Navigation() {
             href="/"
             className="text-xl font-bold bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
           >
-            Fedjost Ayomide
+            &lt;/&gt;
           </Link>
 
           {/* Desktop Navigation */}
@@ -55,8 +55,8 @@ export function Navigation() {
                 href={item.href}
                 className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
                   pathname === item.href
-                    ? 'text-primary'
-                    : 'text-muted-foreground'
+                    ? "text-primary"
+                    : "text-muted-foreground"
                 }`}
               >
                 {item.label}
@@ -105,8 +105,8 @@ export function Navigation() {
                 onClick={() => setIsOpen(false)}
                 className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   pathname === item.href
-                    ? 'text-primary bg-primary/10'
-                    : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                 }`}
               >
                 {item.label}
@@ -116,5 +116,5 @@ export function Navigation() {
         )}
       </nav>
     </motion.header>
-  )
+  );
 }
