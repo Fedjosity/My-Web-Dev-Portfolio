@@ -88,7 +88,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider defaultTheme="dark" attribute="class">
+        <ThemeProvider defaultTheme="dark">
           <Navigation />
           <main className="min-h-screen">{children}</main>
           <Footer />
