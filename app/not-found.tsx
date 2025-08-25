@@ -20,11 +20,11 @@ export default function NotFound() {
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
-            This page is under construction
+            Oops! This page doesn’t exist.
           </h1>
           <p className="text-muted-foreground mb-8 leading-relaxed">
-            I'm crafting something new here. Please check back soon. In the
-            meantime, you can return home, browse projects, or contact me.
+            The page you’re looking for couldn’t be found. In the meantime, you
+            can go back home, explore projects, or get in touch with me.
           </p>
 
           <div className="flex flex-wrap gap-3">

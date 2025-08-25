@@ -11,6 +11,7 @@ import type { BlogPost } from "../../types/admin-types";
 
 export default function BlogPage() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [featuredPostImages, setFeaturedPostImages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,6 +26,24 @@ export default function BlogPage() {
         // Filter to only show published posts on the frontend
         const publishedPosts = data.filter((post: BlogPost) => post.published);
         setBlogPosts(publishedPosts);
+
+        // Fetch images for featured post if it exists
+        const featuredPost = publishedPosts.find(
+          (post: BlogPost) => post.featured
+        );
+        if (featuredPost) {
+          try {
+            const imagesResponse = await fetch(
+              `/api/blog/posts/${featuredPost.slug}/images`
+            );
+            if (imagesResponse.ok) {
+              const imagesData = await imagesResponse.json();
+              setFeaturedPostImages(imagesData);
+            }
+          } catch (err) {
+            console.error("Error fetching featured post images:", err);
+          }
+        }
       } catch (err: any) {
         console.error("Error fetching blog posts:", err);
         setError(err.message || "Failed to load blog posts");
@@ -104,10 +123,34 @@ export default function BlogPage() {
           >
             <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden">
               <div className="md:flex">
-                <div className="md:w-1/3 bg-gradient-to-br from-blue-500/10 to-green-500/10 p-8 flex items-center justify-center">
-                  <div className="text-4xl font-bold text-primary">
-                    Featured
-                  </div>
+                <div className="md:w-1/3 relative overflow-hidden">
+                  {featuredPostImages.length > 0 ? (
+                    <div className="h-full relative">
+                      {/* Blurred background image */}
+                      <div
+                        className="absolute inset-0 bg-cover bg-center bg-no-repeat blur-sm transform transition-transform duration-700 ease-in-out group-hover:scale-110"
+                        style={{
+                          backgroundImage: `url(${featuredPostImages[0].image_url})`,
+                        }}
+                      />
+                      {/* Dark overlay */}
+                      <div className="absolute inset-0 bg-black/50" />
+                      {/* Gradient overlay (optional, keep for brand consistency) */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-green-500/20" />
+                      {/* Foreground content */}
+                      <div className="relative z-10 h-full flex items-center justify-center">
+                        <div className="text-4xl font-bold text-primary drop-shadow-lg">
+                          Featured
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="h-full bg-gradient-to-br from-blue-500/10 to-green-500/10 p-8 flex items-center justify-center">
+                      <div className="ext-4xl font-bold text-primary drop-shadow-lg">
+                        Featured
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="md:w-2/3">
                   <CardHeader>

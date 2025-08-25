@@ -9,7 +9,8 @@ const techStack = [
   { name: "Tailwind CSS", level: 92, color: "#38bdf8" },
   { name: "Node.js", level: 85, color: "#339933" },
   { name: "Supabase", level: 80, color: "#3776ab" },
-  { name: "Framer Motion", level: 78, color: "#336791" },
+  { name: "Dev Ops", level: 48, color: "#336791" },
+  { name: "Firebase", level: 76, color: "#61dafb" },
 ];
 
 export function TechStackChart() {

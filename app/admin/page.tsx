@@ -11,6 +11,7 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import StatsSummary from "./components/StatsSummary";
 import TabsContainer from "./components/TabsContainer";
+import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import type { Contact, Project, BlogPost } from "../../types/admin-types";
 
 export default function AdminPage() {
@@ -175,6 +176,16 @@ export default function AdminPage() {
           blogPosts={blogPosts}
           onRefresh={fetchData}
         />
+
+        {/* Analytics Dashboard */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mt-12"
+        >
+          <AnalyticsDashboard />
+        </motion.div>
       </div>
     </div>
   );

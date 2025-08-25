@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { formatBlogContent } from "@/lib/utils";
+import { useBlogPostTracking } from "@/hooks/use-analytics";
+import { MultimediaShowcase } from "@/components/multimedia-showcase";
 import type { BlogPost } from "../../../types/admin-types";
 
 interface BlogPostPageProps {
@@ -18,6 +21,7 @@ interface BlogPostPageProps {
 
 export default function BlogPostPage({ params }: BlogPostPageProps) {
   const [post, setPost] = useState<BlogPost | null>(null);
+  const [images, setImages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -35,6 +39,17 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         }
         const data = await response.json();
         setPost(data);
+
+        // Fetch images for this post
+        if (data.id) {
+          const imagesResponse = await fetch(
+            `/api/blog/posts/${params.slug}/images`
+          );
+          if (imagesResponse.ok) {
+            const imagesData = await imagesResponse.json();
+            setImages(imagesData);
+          }
+        }
       } catch (err: any) {
         console.error("Error fetching blog post:", err);
         setError(err.message || "Failed to load blog post");
@@ -45,6 +60,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
     fetchBlogPost();
   }, [params.slug, router]);
+
+  // Track blog post analytics
+  useBlogPostTracking(post?.id, params.slug, post?.title);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -137,28 +155,57 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
           >
             {/* Header */}
             <div className="space-y-4">
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  {new Date(post.created_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  {post.read_time} min read
-                </div>
-              </div>
+              {/* Featured Post Header */}
+              {post.featured && images.length > 0 ? (
+                <>
+                  {/* Featured Image */}
+                  <div className="relative -mx-8 -mt-8 mb-8 h-64 md:h-80 overflow-hidden rounded-lg">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat transform transition-transform duration-700 ease-in-out group-hover:scale-110"
+                      style={{
+                        backgroundImage: `url(${images[0].image_url})`,
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/40" />
+                  </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-                {post.title}
-              </h1>
+                  {/* Title + Excerpt */}
+                  <div className="text-center space-y-4">
+                    <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+                      {post.title}
+                    </h1>
+                    <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                      {post.excerpt}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Non-featured post fallback */}
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      {new Date(post.created_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      {post.read_time} min read
+                    </div>
+                  </div>
 
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                {post.excerpt}
-              </p>
+                  <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+                    {post.title}
+                  </h1>
+
+                  <p className="text-xl text-muted-foreground leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                </>
+              )}
 
               {post.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
@@ -176,10 +223,21 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               <CardContent className="p-8">
                 <div
                   className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-code:text-primary prose-pre:bg-muted prose-pre:text-foreground"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
+                  dangerouslySetInnerHTML={{
+                    __html: formatBlogContent(post.content),
+                  }}
                 />
               </CardContent>
             </Card>
+
+            {/* Multimedia Showcase */}
+            {images.length > 0 && (
+              <MultimediaShowcase
+                images={images}
+                title="Gallery"
+                className="mt-8"
+              />
+            )}
 
             {/* Share Button */}
             <div className="flex justify-center">

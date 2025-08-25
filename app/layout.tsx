@@ -5,6 +5,7 @@ import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { Toaster } from "@/components/ui/sonner";
+import { AnalyticsProvider } from "@/components/analytics-provider";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -89,10 +90,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider defaultTheme="dark">
-          <Navigation />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-          <Toaster />
+          <AnalyticsProvider>
+            <Navigation />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+            <Toaster />
+          </AnalyticsProvider>
         </ThemeProvider>
       </body>
     </html>

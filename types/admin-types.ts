@@ -32,6 +32,16 @@ export interface BlogPost {
   updated_at: string;
 }
 
+export interface BlogImage {
+  id: string;
+  post_id: string;
+  image_url: string;
+  alt_text: string;
+  caption?: string;
+  order_index: number;
+  created_at: string;
+}
+
 export type NewProjectInput = {
   title: string;
   description: string;
