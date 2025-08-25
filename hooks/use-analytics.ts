@@ -70,8 +70,8 @@ export const usePageViewTracking = () => {
 };
 
 export const useBlogPostTracking = (
-  postSlug: string,
   postId?: string,
+  postSlug?: string,
   postTitle?: string
 ) => {
   const startTimeRef = useRef<number>(Date.now());
