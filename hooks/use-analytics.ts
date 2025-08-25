@@ -70,8 +70,8 @@ export const usePageViewTracking = () => {
 };
 
 export const useBlogPostTracking = (
-  postId?: string,
   postSlug: string,
+  postId?: string,
   postTitle?: string
 ) => {
   const startTimeRef = useRef<number>(Date.now());
@@ -93,7 +93,6 @@ export const useBlogPostTracking = (
       ...clientInfo,
     };
 
-    // Track blog post view
     fetch("/api/analytics/blog-view", {
       method: "POST",
       headers: {
@@ -102,7 +101,6 @@ export const useBlogPostTracking = (
       body: JSON.stringify(analyticsData),
     }).catch(console.error);
 
-    // Track time spent when user leaves the page
     const handleBeforeUnload = () => {
       const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
 
@@ -125,5 +123,5 @@ export const useBlogPostTracking = (
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [postId, postSlug, postTitle]);
+  }, [postSlug, postId, postTitle]);
 };
