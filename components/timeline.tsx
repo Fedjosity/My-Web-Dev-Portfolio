@@ -6,33 +6,33 @@ import { Badge } from "@/components/ui/badge";
 
 const timeline = [
   {
-    year: "2020",
+    year: "2021",
     title: "Started Programming Journey",
     description: "Began learning HTML, CSS, and JavaScript fundamentals",
     skills: ["HTML", "CSS", "JavaScript"],
   },
   {
-    year: "2021",
+    year: "2022",
     title: "Frontend Frameworks",
     description:
       "Discovered React and started building interactive web applications",
-    skills: ["React", "Bootstrap", "jQuery"],
+    skills: ["React", "Bootstrap"],
   },
   {
-    year: "2022",
+    year: "2023",
     title: "Full Stack Development",
     description: "Learned backend technologies and database management",
     skills: ["Node.js", "Express", "MongoDB", "PostgreSQL"],
   },
   {
-    year: "2023",
+    year: "2024",
     title: "Modern Stack Mastery",
     description:
       "Specialized in Next.js, TypeScript, and modern development practices",
-    skills: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma"],
+    skills: ["Next.js", "TypeScript", "Tailwind CSS"],
   },
   {
-    year: "2024",
+    year: "2025",
     title: "Professional Growth",
     description:
       "Building production-ready applications and expanding expertise",
