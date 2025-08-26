@@ -172,7 +172,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
                 <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-border/50 shadow-2xl mx-auto">
                   <Image
-                    src="/fonts/WhatsApp Image 2025-07-27 at 11.22.45 AM (1).jpeg"
+                    src="/fonts/Frame.jpeg"
                     alt="Fedjost Ayomide"
                     width={500}
                     height={500}
