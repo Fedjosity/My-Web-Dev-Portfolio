@@ -71,6 +71,8 @@ export async function GET(req: Request) {
 
   try {
     const token = process.env.GITHUB_TOKEN;
+    let response;
+
     if (token) {
       const json = await fetchGraphQL(username, token);
       const weeksRaw =
@@ -86,16 +88,36 @@ export async function GET(req: Request) {
           ),
         }))
       );
-      return NextResponse.json({ weeks });
+      response = NextResponse.json({ weeks });
+    } else {
+      const data = await fetchFallback(username);
+      response = NextResponse.json(data);
     }
 
-    const data = await fetchFallback(username);
-    return NextResponse.json(data);
+    // Set cache headers to prevent caching
+    response.headers.set(
+      "Cache-Control",
+      "no-cache, no-store, must-revalidate"
+    );
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+
+    return response;
   } catch (err: any) {
     // Last-resort graceful response: never hard-fail in UI
-    return NextResponse.json(
+    const response = NextResponse.json(
       { weeks: [], error: String(err) },
       { status: 200 }
     );
+
+    // Set cache headers even for error responses
+    response.headers.set(
+      "Cache-Control",
+      "no-cache, no-store, must-revalidate"
+    );
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+
+    return response;
   }
 }

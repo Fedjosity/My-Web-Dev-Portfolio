@@ -1,48 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { GitHubContributions } from "@/components/github-contributions";
-import { GitFork, Star, Users, GitCommit } from "lucide-react";
-
-interface GitHubStats {
-  totalRepos: number;
-  totalStars: number;
-  totalForks: number;
-  followers: number;
-  contributionsThisYear: number;
-}
+import { GitFork, Star, Users, GitCommit, RefreshCw } from "lucide-react";
+import { useGitHubStats } from "@/hooks/use-github-stats";
 
 export function GitHubStats() {
-  const [stats, setStats] = useState<GitHubStats>({
-    totalRepos: 0,
-    totalStars: 0,
-    totalForks: 0,
-    followers: 0,
-    contributionsThisYear: 0,
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await fetch("/api/github/stats", { cache: "no-store" });
-        if (!res.ok) throw new Error("Failed to load stats");
-        const githubStats = await res.json();
-        setStats(githubStats);
-        // Store contribution weeks for the contributions component
-        (window as any).__CONTRIB_WEEKS__ =
-          githubStats.contributionsWeeks || [];
-      } catch (error) {
-        console.error("Error fetching GitHub stats:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
-  }, []);
+  const { stats, loading, refreshing, error, fetchStats, lastUpdated } =
+    useGitHubStats();
 
   const statItems = [
     { icon: GitCommit, label: "Repositories", value: stats.totalRepos },
@@ -76,6 +43,31 @@ export function GitHubStats() {
 
   return (
     <div className="space-y-6">
+      {/* Header with refresh button and last updated */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold">GitHub Statistics</h3>
+          {lastUpdated && (
+            <p className="text-sm text-muted-foreground">
+              Last updated: {lastUpdated.toLocaleTimeString()}
+            </p>
+          )}
+          {error && <p className="text-sm text-destructive">Error: {error}</p>}
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => fetchStats(true)}
+          disabled={refreshing}
+          className="flex items-center gap-2"
+        >
+          <RefreshCw
+            className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+          />
+          {refreshing ? "Refreshing..." : "Refresh"}
+        </Button>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {statItems.map((item, index) => (
           <motion.div

@@ -32,8 +32,21 @@ export function GitHubContributions({
           setWeeks(weeksProp);
           return;
         }
+
+        // Add timestamp to prevent caching
+        const timestamp = Date.now();
         const res = await fetch(
-          `/api/github/contributions?username=${encodeURIComponent(username)}`
+          `/api/github/contributions?username=${encodeURIComponent(
+            username
+          )}&t=${timestamp}`,
+          {
+            cache: "no-store",
+            headers: {
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+              Pragma: "no-cache",
+              Expires: "0",
+            },
+          }
         );
         if (!res.ok) throw new Error("Failed to fetch contributions");
         const data = await res.json();

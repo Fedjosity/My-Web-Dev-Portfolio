@@ -137,18 +137,39 @@ export async function GET() {
       .flat()
       .reduce((acc, d) => acc + (d.count || 0), 0);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       totalRepos: user?.public_repos || 0,
       totalStars,
       totalForks,
       followers: user?.followers || 0,
       contributionsWeeks: weeks,
       contributionsThisYear,
+      lastUpdated: new Date().toISOString(),
     });
+
+    // Set cache headers to prevent caching
+    response.headers.set(
+      "Cache-Control",
+      "no-cache, no-store, must-revalidate"
+    );
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+
+    return response;
   } catch (e: any) {
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: e.message, contributionsWeeks: [], contributionsThisYear: 0 },
       { status: 200 }
     );
+
+    // Set cache headers even for error responses
+    response.headers.set(
+      "Cache-Control",
+      "no-cache, no-store, must-revalidate"
+    );
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+
+    return response;
   }
 }
