@@ -1,20 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { X, Plus, Eye, Edit3, Image as ImageIcon } from "lucide-react";
+import { Eye, Edit3, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { formatBlogContent } from "@/lib/utils";
 import { ImageUpload } from "@/components/ui/image-upload";
 import type { BlogPost, NewBlogPostInput } from "../../../types/admin-types";
+
+// Dynamically import React Quill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface AddBlogPostFormProps {
   onSuccess: () => void;
@@ -80,7 +84,7 @@ export default function AddBlogPostForm({
         title: formData.title,
         slug: formData.slug,
         excerpt: formData.excerpt,
-        content: formData.content,
+        content: formData.content, // now HTML from ReactQuill
         tags: tagsArray,
         featured: formData.featured,
         published: formData.published,
@@ -90,8 +94,7 @@ export default function AddBlogPostForm({
       let postId: string;
 
       if (editingPost) {
-        // Update existing post
-        const { data: updateData, error } = await supabase
+        const { error } = await supabase
           .from("blog_posts")
           .update(blogData)
           .eq("id", editingPost.id)
@@ -102,7 +105,6 @@ export default function AddBlogPostForm({
         postId = editingPost.id;
         toast.success("Blog post updated successfully!");
       } else {
-        // Create new post
         const { data: insertData, error } = await supabase
           .from("blog_posts")
           .insert([blogData])
@@ -116,7 +118,6 @@ export default function AddBlogPostForm({
 
       // Save images if any
       if (images.length > 0 && postId) {
-        // Delete existing images first (for updates)
         if (editingPost) {
           await supabase.from("blog_images").delete().eq("post_id", postId);
         }
@@ -144,7 +145,6 @@ export default function AddBlogPostForm({
         }
       }
 
-      // Reset form
       if (!editingPost) {
         setFormData({
           title: "",
@@ -162,7 +162,6 @@ export default function AddBlogPostForm({
     } catch (error: any) {
       console.error("Error saving blog post:", error);
 
-      // Handle duplicate slug error specifically
       if (error.code === "23505" && error.message.includes("slug")) {
         toast.error(
           "A blog post with this slug already exists. Please use a different slug or generate a new one."
@@ -181,7 +180,6 @@ export default function AddBlogPostForm({
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
 
-    // Add timestamp to make it unique
     const timestamp = Date.now().toString().slice(-6);
     const uniqueSlug = `${baseSlug}-${timestamp}`;
 
@@ -197,6 +195,7 @@ export default function AddBlogPostForm({
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Title & Slug */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="title">Title *</Label>
@@ -234,6 +233,7 @@ export default function AddBlogPostForm({
             </div>
           </div>
 
+          {/* Excerpt */}
           <div className="space-y-2">
             <Label htmlFor="excerpt">Excerpt *</Label>
             <Textarea
@@ -248,6 +248,7 @@ export default function AddBlogPostForm({
             />
           </div>
 
+          {/* Content with ReactQuill */}
           <div className="space-y-2">
             <Label htmlFor="content">Content *</Label>
             <Tabs defaultValue="write" className="w-full">
@@ -265,52 +266,19 @@ export default function AddBlogPostForm({
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="write" className="space-y-2">
-                <Textarea
-                  id="content"
+                <ReactQuill
+                  theme="snow"
                   value={formData.content}
-                  onChange={(e) =>
-                    setFormData({ ...formData, content: e.target.value })
-                  }
-                  required
-                  placeholder="Write your blog post content here...
-
-# Main Heading
-## Sub Heading
-### Section Heading
-
-**Bold text** and *italic text*
-
-- List item 1
-- List item 2
-
-```javascript
-console.log('Code block');
-```
-
-[Link text](https://example.com)"
-                  rows={15}
+                  onChange={(val) => setFormData({ ...formData, content: val })}
+                  className="bg-background rounded-md"
                 />
-                <div className="text-xs text-muted-foreground space-y-1">
-                  <p>
-                    <strong>Formatting Guide:</strong>
-                  </p>
-                  <p>• Use # ## ### for headings</p>
-                  <p>• Use **text** for bold and *text* for italic</p>
-                  <p>• Use - for bullet lists</p>
-                  <p>• Use ``` for code blocks</p>
-                  <p>• Use `code` for inline code</p>
-                  <p>• Use [text](url) for links</p>
-                  <p>• Use double line breaks for paragraphs</p>
-                </div>
               </TabsContent>
               <TabsContent value="preview">
                 <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div
                       className="prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-code:text-primary prose-pre:bg-muted prose-pre:text-foreground"
-                      dangerouslySetInnerHTML={{
-                        __html: formatBlogContent(formData.content),
-                      }}
+                      dangerouslySetInnerHTML={{ __html: formData.content }}
                     />
                   </CardContent>
                 </Card>
@@ -318,6 +286,7 @@ console.log('Code block');
             </Tabs>
           </div>
 
+          {/* Tags & Read Time */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="tags">Tags</Label>
@@ -351,6 +320,7 @@ console.log('Code block');
             </div>
           </div>
 
+          {/* Featured & Published */}
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <Switch
@@ -374,7 +344,7 @@ console.log('Code block');
             </div>
           </div>
 
-          {/* Image Upload Section */}
+          {/* Image Upload */}
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
               <ImageIcon className="h-4 w-4" />
@@ -387,6 +357,7 @@ console.log('Code block');
             />
           </div>
 
+          {/* Actions */}
           <div className="flex gap-2">
             <Button type="submit" disabled={loading}>
               {loading
