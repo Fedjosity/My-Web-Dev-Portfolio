@@ -170,13 +170,6 @@ export default function AdminPage() {
           />
         </motion.div>
 
-        <TabsContainer
-          projects={projects}
-          contacts={contacts}
-          blogPosts={blogPosts}
-          onRefresh={fetchData}
-        />
-
         {/* Analytics Dashboard */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -186,6 +179,13 @@ export default function AdminPage() {
         >
           <AnalyticsDashboard />
         </motion.div>
+
+        <TabsContainer
+          projects={projects}
+          contacts={contacts}
+          blogPosts={blogPosts}
+          onRefresh={fetchData}
+        />
       </div>
     </div>
   );
