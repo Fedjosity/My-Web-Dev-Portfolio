@@ -28,10 +28,13 @@ export function TechStackChart() {
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
               <motion.div
-                className="h-full rounded-full"
-                style={{ backgroundColor: tech.color }}
-                initial={{ width: 0 }}
-                animate={{ width: `${tech.level}%` }}
+                className="h-full rounded-full origin-left"
+                style={{
+                  backgroundColor: tech.color,
+                  width: `${tech.level}%`, // final width
+                }}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
                 transition={{
                   delay: index * 0.1,
                   duration: 1,

@@ -1,3 +1,5 @@
+"use client";
+
 import { Hero3D } from "@/components/hero-3d";
 import { GitHubStats } from "@/components/github-stats";
 import { TechStackChart } from "@/components/tech-stack-chart";
@@ -7,6 +9,32 @@ import { ArrowDown, Download, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
+import { motion, Variants } from "framer-motion";
+
+// Reusable variants
+const sectionVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.2 },
+  },
+};
+
+const childVariants: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] },
+  },
+};
+
+const fadeIn: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
+  },
+};
 
 export default function Home() {
   return (
@@ -20,23 +48,40 @@ export default function Home() {
           <Hero3D />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
+        <motion.div
+          className="relative z-10 container mx-auto px-4 text-center"
+          initial="hidden"
+          animate="visible"
+          variants={sectionVariants}
+        >
+          <motion.h1
+            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
+            variants={childVariants}
+          >
             <span className="bg-gradient-to-r from-blue-500 via-green-500 to-blue-500 bg-clip-text text-transparent">
               Fedjost Ayomide
             </span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8">
+          <motion.p
+            className="text-xl md:text-2xl text-muted-foreground mb-8"
+            variants={childVariants}
+          >
             Fullstack Web Developer
-          </p>
+          </motion.p>
 
-          <p className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto">
+          <motion.p
+            className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto"
+            variants={childVariants}
+          >
             Crafting beautiful, responsive, and user-friendly web applications
             with modern technologies like React, Next.js, and TypeScript.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+            variants={childVariants}
+          >
             <Button size="lg" className="group" asChild>
               <Link href="/projects">
                 View My Work
@@ -50,9 +95,12 @@ export default function Home() {
                 Download CV
               </a>
             </Button>
-          </div>
+          </motion.div>
 
-          <div className="flex justify-center gap-6">
+          <motion.div
+            className="flex justify-center gap-6"
+            variants={childVariants}
+          >
             <Button variant="ghost" size="lg" className="group" asChild>
               <a
                 href="https://github.com/fedjosity"
@@ -84,36 +132,56 @@ export default function Home() {
                 <FaWhatsapp className="h-5 w-5 group-hover:scale-110 transition-transform" />
               </Link>
             </Button>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ repeat: Infinity, duration: 2 }}
+        >
           <div className="w-6 h-10 border-2 border-primary rounded-full flex justify-center">
             <div className="w-1 h-3 bg-primary rounded-full mt-2 animate-bounce" />
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* GitHub Stats Section */}
-      <section className="py-20 bg-muted/20">
-        <div className="container mx-auto px-4 text-center mb-12">
+      <motion.section
+        className="py-20 bg-muted/20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
+      >
+        <motion.div
+          className="container mx-auto px-4 text-center mb-12"
+          variants={childVariants}
+        >
           <h2 className="text-3xl font-bold mb-4">GitHub Activity</h2>
           <p className="text-muted-foreground">
             Live stats from my GitHub profile
           </p>
-        </div>
+        </motion.div>
 
-        <div className="container mx-auto px-4">
+        <motion.div className="container mx-auto px-4" variants={childVariants}>
           <GitHubStats />
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Technical Skills Section */}
-      <section className="py-20">
+      <motion.section
+        className="py-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
+      >
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
           {/* Left Side */}
-          <div>
+          <motion.div variants={childVariants}>
             <div className="relative group mb-8">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
               <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-border/50 shadow-2xl mx-auto">
@@ -135,19 +203,27 @@ export default function Home() {
             <Button asChild>
               <Link href="/projects">View Projects</Link>
             </Button>
-          </div>
+          </motion.div>
 
           {/* Right Side: Chart */}
-          <TechStackChart />
+          <motion.div variants={childVariants}>
+            <TechStackChart />
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Timeline Section */}
-      <section className="py-20 bg-muted/20">
-        <div className="container mx-auto px-4">
+      <motion.section
+        className="py-20 bg-muted/20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
+      >
+        <motion.div className="container mx-auto px-4" variants={childVariants}>
           <Timeline />
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
     </div>
   );
 }

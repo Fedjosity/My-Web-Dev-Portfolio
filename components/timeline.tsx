@@ -50,8 +50,8 @@ export function Timeline() {
       >
         <h2 className="text-3xl font-bold mb-4">My Journey</h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          From curious beginner to fullstack developer - here's how I've grown
-          over the years
+          From curious beginner to fullstack developer - here&apos;s how
+          I&apos;ve grown over the years
         </p>
       </motion.div>
 
