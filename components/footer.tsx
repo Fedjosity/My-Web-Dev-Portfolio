@@ -78,12 +78,6 @@ export function Footer() {
 
         <div className="mt-10 flex items-center justify-between text-sm text-muted-foreground">
           <span>© {year} Fedjost Ayomide</span>
-          <div className="relative">
-            <span className="relative z-10">
-              Built with Next.js, TypeScript & Tailwind
-            </span>
-            <span className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          </div>
         </div>
       </div>
     </footer>
