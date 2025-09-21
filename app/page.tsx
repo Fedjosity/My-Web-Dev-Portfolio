@@ -90,7 +90,7 @@ export default function Home() {
             </Button>
 
             <Button size="lg" variant="outline" className="group" asChild>
-              <a href="/Fedjost-Ayomide-Web-Dev-CV.pdf" download>
+              <a href="fonts/Fedjost Ayomide Web Dev CV (2).pdf" download>
                 <Download className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
                 Download CV
               </a>
