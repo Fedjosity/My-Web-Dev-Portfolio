@@ -139,14 +139,14 @@ export default function BlogPage() {
                       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-green-500/20" />
                       {/* Foreground content */}
                       <div className="relative z-10 h-full flex items-center justify-center">
-                        <div className="text-4xl font-bold text-primary drop-shadow-lg">
+                        <div className="text-4xl font-bold text-primary drop-shadow-lg p-8">
                           Featured
                         </div>
                       </div>
                     </div>
                   ) : (
                     <div className="h-full bg-gradient-to-br from-blue-500/10 to-green-500/10 p-8 flex items-center justify-center">
-                      <div className="ext-4xl font-bold text-primary drop-shadow-lg">
+                      <div className="text-4xl font-bold text-primary drop-shadow-lg p-8">
                         Featured
                       </div>
                     </div>

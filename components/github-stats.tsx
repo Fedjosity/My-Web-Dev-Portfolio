@@ -54,18 +54,6 @@ export function GitHubStats() {
           )}
           {error && <p className="text-sm text-destructive">Error: {error}</p>}
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => fetchStats(true)}
-          disabled={refreshing}
-          className="flex items-center gap-2"
-        >
-          <RefreshCw
-            className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
-          />
-          {refreshing ? "Refreshing..." : "Refresh"}
-        </Button>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

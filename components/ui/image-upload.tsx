@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { X, Upload, Image as ImageIcon, GripVertical } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface ImageFile {
   id: string;
@@ -191,10 +192,12 @@ export function ImageUpload({
                     {/* Image Preview */}
                     <div className="flex-shrink-0">
                       {image.url ? (
-                        <img
+                        <Image
                           src={image.url}
                           alt={image.altText}
                           className="w-20 h-20 object-cover rounded-lg"
+                          width={500}
+                          height={500}
                         />
                       ) : image.file ? (
                         <div className="w-20 h-20 bg-muted rounded-lg flex items-center justify-center">

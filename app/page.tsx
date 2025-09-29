@@ -167,7 +167,7 @@ export default function Home() {
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
-        <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row gap-12 items-center">
           {/* Left Side */}
           <motion.div variants={childVariants}>
             <div className="relative group mb-8">
@@ -183,10 +183,10 @@ export default function Home() {
               </div>
             </div>
 
-            <h2 className="text-3xl font-bold mb-6">Technical Skills</h2>
+            <h2 className="text-3xl font-bold mb-6">Full‑Stack Tech Stack</h2>
             <p className="text-muted-foreground mb-8 text-lg">
-              I specialize in modern web technologies and continuously expand my
-              skillset to stay current with industry trends.
+            I specialize in modern web technologies and continuously expand my
+            skillset to stay current with industry trends.
             </p>
             <Button asChild>
               <Link href="/projects">View Projects</Link>
@@ -194,11 +194,13 @@ export default function Home() {
           </motion.div>
 
           {/* Right Side: Chart */}
-          <motion.div variants={childVariants}>
+          <motion.div variants={childVariants} className="px-4">
             <TechStackChart />
           </motion.div>
-        </div>
+      </div>
       </motion.section>
+
+      
 
       {/* Timeline Section */}
       <motion.section

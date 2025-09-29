@@ -16,6 +16,7 @@ import {
 import { ExternalLink, Github, Star, GitFork, Calendar } from "lucide-react";
 import { getGitHubRepos } from "@/lib/github";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 interface GitHubRepo {
   id: number;
@@ -214,10 +215,12 @@ export default function ProjectsPage() {
                   <Card className="h-full border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/50 transition-colors">
                     {project.image_url && (
                       <div className="aspect-video overflow-hidden rounded-t-lg">
-                        <img
+                        <Image
                           src={project.image_url}
                           alt={project.title}
                           className="w-full h-full object-cover"
+                          width={500}
+                          height={500}
                         />
                       </div>
                     )}
@@ -287,7 +290,7 @@ export default function ProjectsPage() {
           <h2 className="text-2xl font-bold mb-6">
             GitHub Repositories ({filteredRepos.length})
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col gap-6">
             {filteredRepos.map((repo, index) => (
               <motion.div
                 key={repo.id}

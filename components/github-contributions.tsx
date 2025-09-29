@@ -112,7 +112,7 @@ export function GitHubContributions({
         )}
       </CardHeader>
       <CardContent className="p-6">
-        <div className="overflow-x-auto">
+        <div className="">
           {showError && (
             <p className="text-xs text-destructive mb-3">
               {error}. Showing nothing because both GitHub and fallback failed.
@@ -120,7 +120,7 @@ export function GitHubContributions({
           )}
 
           <TooltipProvider>
-            <div className="flex items-end gap-1">
+            <div className="flex overflow-x-auto items-end gap-1">
               {weeks.map((week, wi) => (
                 <div key={wi} className="flex flex-col gap-1">
                   {week.map((day, di) => (
