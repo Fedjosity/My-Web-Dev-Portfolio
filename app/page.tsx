@@ -137,7 +137,7 @@ export default function Home() {
             className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto"
             variants={childVariants}
           >
-            Right now I’m shipping delightful experiences with Next.js, TypeScript, and a splash of 3D. If you like crisp UI and clean DX, we’ll get along.
+            Right now I’m shipping delightful experiences with Next.js, TypeScript, and a splash of 3D. If you like crisp UI and clean shii, we’ll get along.
           </motion.p>
 
           <motion.div
