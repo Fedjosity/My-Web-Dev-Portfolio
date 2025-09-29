@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
 import { motion, Variants } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
 
 // Reusable variants
 const sectionVariants: Variants = {
@@ -37,6 +38,65 @@ const fadeIn: Variants = {
 };
 
 export default function Home() {
+  const greetings = useMemo(
+    () => [
+      "Hi",
+      "Hola",
+      "Bonjour",
+      "Hallo",
+      "Ciao",
+      "Olá",
+      "Namaste",
+      "Konnichiwa",
+      "Salaam",
+      "Sannu",
+    ],
+    []
+  );
+
+  const [greetIndex, setGreetIndex] = useState(0);
+  const [display, setDisplay] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [holding, setHolding] = useState(false);
+
+  useEffect(() => {
+    const current = greetings[greetIndex % greetings.length];
+    const isComplete = display === current;
+    const isEmpty = display === "";
+
+    let stepDelay = 90;
+    if (!deleting && isComplete && holding) stepDelay = 3000; // hold full word
+    if (deleting) stepDelay = 45; // delete faster
+
+    const t = setTimeout(() => {
+      if (!deleting) {
+        // if finished typing current word
+        if (display === current) {
+          if (!holding) {
+            setHolding(true); // start hold period
+          } else {
+            setHolding(false);
+            setDeleting(true); // end hold, start deleting
+          }
+          return;
+        }
+        // typing next character
+        const next = current.slice(0, display.length + 1);
+        setDisplay(next);
+      } else {
+        // deleting
+        const next = current.slice(0, display.length - 1);
+        setDisplay(next);
+        if (next === "") {
+          setDeleting(false);
+          setGreetIndex((i) => (i + 1) % greetings.length);
+        }
+      }
+    }, stepDelay);
+
+    return () => clearTimeout(t);
+  }, [display, deleting, greetIndex, greetings, holding]);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -58,7 +118,10 @@ export default function Home() {
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
             variants={childVariants}
           >
-            <span className="bg-gradient-to-r from-blue-500 via-green-500 to-blue-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-500 via-green-500 to-blue-500 bg-clip-text text-transparent">{display}</span>
+            <span className="ml-1 inline-block w-[1ch] animate-pulse">|</span>
+            <span className="">, I’m</span>{" "}
+            <span className=" bg-clip-text ">
               Fedjost Ayomide
             </span>
           </motion.h1>
@@ -67,15 +130,14 @@ export default function Home() {
             className="text-xl md:text-2xl text-muted-foreground mb-8"
             variants={childVariants}
           >
-            Fullstack Web Developer
+            I build web things end‑to‑end—fast, accessible, and a little bit fun.
           </motion.p>
 
           <motion.p
             className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto"
             variants={childVariants}
           >
-            Crafting beautiful, responsive, and user-friendly web applications
-            with modern technologies like React, Next.js, and TypeScript.
+            Right now I’m shipping delightful experiences with Next.js, TypeScript, and a splash of 3D. If you like crisp UI and clean DX, we’ll get along.
           </motion.p>
 
           <motion.div
