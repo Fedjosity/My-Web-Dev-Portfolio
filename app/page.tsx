@@ -118,26 +118,29 @@ export default function Home() {
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
             variants={childVariants}
           >
-            <span className="bg-gradient-to-r from-blue-500 via-green-500 to-blue-500 bg-clip-text text-transparent">{display}</span>
+            <span className="bg-gradient-to-r from-blue-500 via-green-500 to-blue-500 bg-clip-text text-transparent">
+              {display}
+            </span>
             <span className="ml-1 inline-block w-[1ch] animate-pulse">|</span>
             <span className="">, I’m</span>{" "}
-            <span className=" bg-clip-text ">
-              Fedjost Ayomide
-            </span>
+            <span className=" bg-clip-text ">Fedjost Ayomide</span>
           </motion.h1>
 
           <motion.p
             className="text-xl md:text-2xl text-muted-foreground mb-8"
             variants={childVariants}
           >
-            I build web things end‑to‑end—fast, accessible, and a little bit fun.
+            I build web things end‑to‑end—fast, accessible, and a little bit
+            fun.
           </motion.p>
 
           <motion.p
             className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto"
             variants={childVariants}
           >
-            Right now I’m shipping delightful experiences with Next.js, TypeScript, and a splash of 3D. If you like crisp UI and clean shii, we’ll get along.
+            Right now I’m shipping delightful experiences with Next.js,
+            TypeScript, and a splash of 3D. If you like crisp UI and clean shii,
+            we’ll get along.
           </motion.p>
 
           <motion.div
@@ -247,8 +250,8 @@ export default function Home() {
 
             <h2 className="text-3xl font-bold mb-6">Full‑Stack Tech Stack</h2>
             <p className="text-muted-foreground mb-8 text-lg">
-            I specialize in modern web technologies and continuously expand my
-            skillset to stay current with industry trends.
+              I specialize in modern web technologies and continuously expand my
+              skillset to stay current with industry trends.
             </p>
             <Button asChild>
               <Link href="/projects">View Projects</Link>
@@ -256,13 +259,14 @@ export default function Home() {
           </motion.div>
 
           {/* Right Side: Chart */}
-          <motion.div variants={childVariants} className="px-4">
+          <motion.div
+            variants={childVariants}
+            className="px-4 h-[550px] w-[500px]"
+          >
             <TechStackChart />
           </motion.div>
-      </div>
+        </div>
       </motion.section>
-
-      
 
       {/* Timeline Section */}
       <motion.section

@@ -30,21 +30,43 @@ const techCategories = [
     title: "Backend",
     accent: "from-emerald-500/15 to-green-500/15",
     ring: "ring-emerald-500/40",
-    items: ["Node.js", "Express", "Next.js API Routes", "tRPC", "REST", "GraphQL", "WebSockets"],
+    items: [
+      "Node.js",
+      "Express",
+      "Next.js API Routes",
+      "tRPC",
+      "REST",
+      "GraphQL",
+      "WebSockets",
+    ],
   },
   {
     id: "data-auth",
     title: "DB & Auth",
     accent: "from-purple-500/15 to-fuchsia-500/15",
     ring: "ring-purple-500/40",
-    items: ["PostgreSQL", "Supabase", "Prisma", "Firebase", "Auth.js", "Row Level Security"],
+    items: [
+      "PostgreSQL",
+      "Supabase",
+      "Prisma",
+      "Firebase",
+      "Auth.js",
+      "Row Level Security",
+    ],
   },
   {
     id: "devops",
     title: "DevOps",
     accent: "from-orange-500/15 to-amber-500/15",
     ring: "ring-orange-500/40",
-    items: ["Vercel", "Docker", "CI/CD", "GitHub Actions", "NGINX", "Cloud Storage"],
+    items: [
+      "Vercel",
+      "Docker",
+      "CI/CD",
+      "GitHub Actions",
+      "NGINX",
+      "Cloud Storage",
+    ],
   },
 ];
 
@@ -72,7 +94,11 @@ export function TechStackChart() {
           <div className="flex items-center justify-center">
             <TabsList className="flex w-full max-w-full overflow-x-auto no-scrollbar justify-start sm:justify-center">
               {techCategories.map((c) => (
-                <TabsTrigger key={c.id} value={c.id} className="whitespace-nowrap">
+                <TabsTrigger
+                  key={c.id}
+                  value={c.id}
+                  className="whitespace-nowrap"
+                >
                   {c.title}
                 </TabsTrigger>
               ))}
