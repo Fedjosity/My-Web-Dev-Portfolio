@@ -5,12 +5,12 @@ import { GitHubStats } from "@/components/github-stats";
 import { TechStackChart } from "@/components/tech-stack-chart";
 import { Timeline } from "@/components/timeline";
 import { Button } from "@/components/ui/button";
+import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 import { ArrowDown, Download, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
 import { motion, Variants } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
 
 // Reusable variants
 const sectionVariants: Variants = {
@@ -38,69 +38,10 @@ const fadeIn: Variants = {
 };
 
 export default function Home() {
-  const greetings = useMemo(
-    () => [
-      "Hi",
-      "Hola",
-      "Bonjour",
-      "Hallo",
-      "Ciao",
-      "Olá",
-      "Namaste",
-      "Konnichiwa",
-      "Salaam",
-      "Sannu",
-    ],
-    []
-  );
-
-  const [greetIndex, setGreetIndex] = useState(0);
-  const [display, setDisplay] = useState("");
-  const [deleting, setDeleting] = useState(false);
-  const [holding, setHolding] = useState(false);
-
-  useEffect(() => {
-    const current = greetings[greetIndex % greetings.length];
-    const isComplete = display === current;
-    const isEmpty = display === "";
-
-    let stepDelay = 90;
-    if (!deleting && isComplete && holding) stepDelay = 3000; // hold full word
-    if (deleting) stepDelay = 45; // delete faster
-
-    const t = setTimeout(() => {
-      if (!deleting) {
-        // if finished typing current word
-        if (display === current) {
-          if (!holding) {
-            setHolding(true); // start hold period
-          } else {
-            setHolding(false);
-            setDeleting(true); // end hold, start deleting
-          }
-          return;
-        }
-        // typing next character
-        const next = current.slice(0, display.length + 1);
-        setDisplay(next);
-      } else {
-        // deleting
-        const next = current.slice(0, display.length - 1);
-        setDisplay(next);
-        if (next === "") {
-          setDeleting(false);
-          setGreetIndex((i) => (i + 1) % greetings.length);
-        }
-      }
-    }, stepDelay);
-
-    return () => clearTimeout(t);
-  }, [display, deleting, greetIndex, greetings, holding]);
-
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen py-20 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-green-500/5 to-purple-500/5" />
 
         {/* 3D Background */}
@@ -118,12 +59,16 @@ export default function Home() {
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
             variants={childVariants}
           >
-            <span className="bg-gradient-to-r from-blue-500 via-green-500 to-blue-500 bg-clip-text text-transparent">
-              {display}
-            </span>
-            <span className="ml-1 inline-block w-[1ch] animate-pulse">|</span>
-            <span className="">, I’m</span>{" "}
-            <span className=" bg-clip-text ">Fedjost Ayomide</span>
+            <LayoutTextFlip
+              text="Hi, I'm "
+              words={[
+                "Fedjost Ayomide",
+                "a Developer",
+                "a Creator",
+                "a Builder",
+              ]}
+              duration={2000}
+            />
           </motion.h1>
 
           <motion.p
@@ -261,7 +206,7 @@ export default function Home() {
           {/* Right Side: Chart */}
           <motion.div
             variants={childVariants}
-            className="px-4 h-[550px] w-[500px]"
+            className="   w-full md:w-[500px] md:h-[520px]"
           >
             <TechStackChart />
           </motion.div>
@@ -270,13 +215,13 @@ export default function Home() {
 
       {/* Timeline Section */}
       <motion.section
-        className="py-20 bg-muted/20"
+        className="bg-muted/20"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
-        <motion.div className="container mx-auto px-4" variants={childVariants}>
+        <motion.div className="w-full" variants={childVariants}>
           <Timeline />
         </motion.div>
       </motion.section>

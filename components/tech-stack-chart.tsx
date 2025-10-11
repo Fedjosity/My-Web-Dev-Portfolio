@@ -34,7 +34,6 @@ const techCategories = [
       "Node.js",
       "Express",
       "Next.js API Routes",
-      "tRPC",
       "REST",
       "GraphQL",
       "WebSockets",
@@ -59,14 +58,7 @@ const techCategories = [
     title: "DevOps",
     accent: "from-orange-500/15 to-amber-500/15",
     ring: "ring-orange-500/40",
-    items: [
-      "Vercel",
-      "Docker",
-      "CI/CD",
-      "GitHub Actions",
-      "NGINX",
-      "Cloud Storage",
-    ],
+    items: ["Vercel", "Docker", "CI/CD", "GitHub Actions", "Cloud Storage"],
   },
 ];
 
