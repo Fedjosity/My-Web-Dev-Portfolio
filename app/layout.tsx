@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     siteName: "Fedjost Ayomide Portfolio",
     images: [
       {
-        url: "/WhatsApp Image 2025-07-27 at 11.22.45 AM (1).jpeg", // add an image inside /public
+        url: "/Frame.jpeg",
         width: 1200,
         height: 630,
         alt: "Fedjost Ayomide Portfolio Preview",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "Fedjost Ayomide - Fullstack Web Developer",
     description:
       "Fullstack web developer specializing in React, Next.js, TypeScript, and modern web technologies.",
-    images: ["/WhatsApp Image 2025-07-27 at 11.22.45 AM (1).jpeg"],
+    images: ["/Frame.jpeg"],
   },
   robots: {
     index: true,

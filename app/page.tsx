@@ -41,7 +41,7 @@ export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen py-20 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-green-500/5 to-purple-500/5" />
 
         {/* 3D Background */}
@@ -203,13 +203,13 @@ export default function Home() {
 
       {/* Timeline Section */}
       <motion.section
-        className="py-20 bg-muted/20"
+        className="bg-muted/20"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
-        <motion.div className="container mx-auto px-4" variants={childVariants}>
+        <motion.div className="w-full" variants={childVariants}>
           <Timeline />
         </motion.div>
       </motion.section>
