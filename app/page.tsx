@@ -39,9 +39,9 @@ const fadeIn: Variants = {
 
 export default function Home() {
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen py-20 flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen py-20 flex items-center justify-center ">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-green-500/5 to-purple-500/5" />
 
         {/* 3D Background */}
