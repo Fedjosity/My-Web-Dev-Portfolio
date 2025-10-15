@@ -209,7 +209,7 @@ export default function Home() {
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
-        <motion.div className="w-full" variants={childVariants}>
+        <motion.div className="container mx-auto px-4" variants={childVariants}>
           <Timeline />
         </motion.div>
       </motion.section>

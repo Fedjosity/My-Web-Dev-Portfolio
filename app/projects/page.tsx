@@ -159,20 +159,20 @@ export default function ProjectsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex flex-col sm:flex-row gap-4 mb-8"
+          className="flex flex-col sm:flex-row gap-4 mb-8 min-h-[60px]"
         >
           <Input
             placeholder="Search projects..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="sm:max-w-sm"
+            className="sm:max-w-sm h-10"
           />
 
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="sm:w-40">
+            <SelectTrigger className="sm:w-40 h-10">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="z-50">
               <SelectItem value="updated">Recently Updated</SelectItem>
               <SelectItem value="stars">Most Stars</SelectItem>
               <SelectItem value="forks">Most Forks</SelectItem>
@@ -181,10 +181,10 @@ export default function ProjectsPage() {
           </Select>
 
           <Select value={filterTag} onValueChange={setFilterTag}>
-            <SelectTrigger className="sm:w-40">
+            <SelectTrigger className="sm:w-40 h-10">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="z-50">
               <SelectItem value="all">All Languages</SelectItem>
               {allLanguages.map((language) => (
                 <SelectItem key={language} value={language!}>
