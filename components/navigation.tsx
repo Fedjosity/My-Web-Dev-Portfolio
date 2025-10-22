@@ -86,7 +86,8 @@ export function Navigation() {
                 {item.name}
               </Link>
             ))}
-            <div className="flex w-full flex-col gap-4">
+            <div className="flex w-full items-center justify-between mx-4">
+              <h1>Theme Toggle</h1>
               <ThemeToggle />
             </div>
           </MobileNavMenu>
