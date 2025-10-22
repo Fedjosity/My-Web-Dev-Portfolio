@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     siteName: "Fedjost Ayomide Portfolio",
     images: [
       {
-        url: "/Frame.jpeg",
+        url: "fonts/Frame.jpeg",
         width: 1200,
         height: 630,
         alt: "Fedjost Ayomide Portfolio Preview",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "Fedjost Ayomide - Fullstack Web Developer",
     description:
       "Fullstack web developer specializing in React, Next.js, TypeScript, and modern web technologies.",
-    images: ["/Frame.jpeg"],
+    images: ["fonts/Frame.jpeg"],
   },
   robots: {
     index: true,
