@@ -33,10 +33,19 @@ const timeline = [
     skills: ["Next.js", "TypeScript", "Tailwind CSS"],
   },
   {
-    title: "Professional Growth",
+    year: "2025",
+    title: "AI & Automation",
     description:
       "Building production-ready applications and expanding expertise",
-    skills: ["Supabase", "Framer Motion", "Three.js", "Docker", "Vercel"],
+    skills: [
+      "Supabase",
+      "Framer Motion",
+      "Three.js",
+      "Docker",
+      "Vercel",
+      "AI",
+      "Automation",
+    ],
   },
 ];
 
