@@ -16,6 +16,17 @@
   }
 }
 
+/* Hide scrollbar but keep scrolling */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
