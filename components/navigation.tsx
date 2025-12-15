@@ -47,10 +47,6 @@ export function Navigation() {
             onItemClick={() => setIsMobileMenuOpen(false)}
             className="space-x-2"
           />
-
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-          </div>
         </NavBody>
 
         {/* Mobile Navigation */}
@@ -86,10 +82,6 @@ export function Navigation() {
                 {item.name}
               </Link>
             ))}
-            <div className="flex w-full items-center justify-between mx-4">
-              <h1>Theme Toggle</h1>
-              <ThemeToggle />
-            </div>
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
