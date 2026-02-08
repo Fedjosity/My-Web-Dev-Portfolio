@@ -17,8 +17,14 @@ export async function POST(request: Request) {
     // Check for environment variables
     if (!process.env.MAILTRAP_USER || !process.env.MAILTRAP_PASS) {
       console.error('Missing Mailtrap credentials in environment variables');
+      console.error('Available env vars:', {
+        hasUser: !!process.env.MAILTRAP_USER,
+        hasPass: !!process.env.MAILTRAP_PASS,
+        hasHost: !!process.env.MAILTRAP_HOST,
+        hasPort: !!process.env.MAILTRAP_PORT
+      });
       return NextResponse.json(
-        { error: 'Server configuration error' },
+        { error: 'Server configuration error: Missing SMTP credentials' },
         { status: 500 }
       );
     }
