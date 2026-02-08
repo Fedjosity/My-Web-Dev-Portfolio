@@ -93,7 +93,7 @@ export default function Home() {
             <Button size="lg" variant="outline" className="group" asChild>
               <a href="fonts/Fedjost_Ayomide_Resume.pdf" download>
                 <Download className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                Download CV
+                Download Resume
               </a>
             </Button>
           </motion.div>
