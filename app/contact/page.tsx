@@ -26,9 +26,29 @@ export default function ContactPage() {
 
     try {
       // Insert into Supabase
-      const { error } = await supabase.from("contacts").insert([formData]);
+      const { error: supabaseError } = await supabase
+        .from("contacts")
+        .insert([formData]);
 
-      if (error) throw error;
+      if (supabaseError) {
+        console.error("Supabase error:", supabaseError);
+        throw new Error("Failed to save contact information");
+      }
+
+      // Send email via API route
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send email notification");
+      }
 
       // Reset form
       setFormData({ name: "", email: "", message: "" });
@@ -42,7 +62,7 @@ export default function ContactPage() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({
       ...formData,
@@ -99,8 +119,9 @@ export default function ContactPage() {
         >
           <h1 className="text-4xl font-bold mb-4">Get In Touch</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Have a project in mind or want to collaborate? I'd love to hear from
-            you. Send me a message and I'll get back to you as soon as possible.
+            Have a project in mind or want to collaborate? I&apos;d love to hear
+            from you. Send me a message and I&apos;ll get back to you as soon as
+            possible.
           </p>
         </motion.div>
 
@@ -227,11 +248,12 @@ export default function ContactPage() {
 
             <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
               <CardContent className="p-6">
-                <h3 className="font-semibold mb-2">Let's Work Together</h3>
+                <h3 className="font-semibold mb-2">Let&apos;s Work Together</h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  I'm currently available for freelance projects and full-time
-                  opportunities. Whether you have a specific project in mind or
-                  just want to chat about technology, feel free to reach out.
+                  I&apos;m currently available for freelance projects and
+                  full-time opportunities. Whether you have a specific project
+                  in mind or just want to chat about technology, feel free to
+                  reach out.
                 </p>
                 <p className="text-muted-foreground text-sm">
                   Response time: Usually within 24 hours
