@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import { ExternalLink, Github, Star, GitFork, Calendar } from "lucide-react";
 import { getGitHubRepos } from "@/lib/github";
-import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 
 interface GitHubRepo {
@@ -42,6 +41,59 @@ interface CustomProject {
   created_at: string;
 }
 
+const CUSTOM_PROJECTS: CustomProject[] = [
+  {
+    id: "1",
+    title: "RefreeG",
+    description:
+      "RefreeG helps you donate securely and support fundraising for trusted individuals, communities, and nonprofits.",
+    tech_stack: ["Next.js", "React", "Tailwind CSS", "Prisma", "PostgreSQL"],
+    live_link: "https://refreeg.com",
+    github_link: null,
+    image_url: "https://www.refreeg.com/hero1.png",
+    tags: ["Full Stack", "Frontend", "Backend", "API", "Database"],
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "2",
+    title: "Locally Grown",
+    description:
+      "Locally Grown is a platform for connecting local farmers with consumers, and supporting small businesses.",
+    tech_stack: ["TypeScript", "Node.js", "Firebase", "React-native"],
+    live_link: "https://www.locallygrown.app",
+    github_link: null,
+    image_url: "https://www.locallygrown.app/handeggs.jpeg",
+    tags: ["Backend", "API", "Database", "Frontend", "Admin Dashboard"],
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "3",
+    title: "Viewlocked",
+    description:
+      "ViewLocked is an AI-powered travel platform unlocking verified local experiences, stays, and services across destinations worldwide.",
+    tech_stack: ["TypeScript", "Next.js"],
+    live_link: "https://www.viewlocked.com",
+    github_link: null,
+    image_url:
+      "https://www.viewlocked.com/_next/image?url=%2Fimg4.jpg&w=1920&q=75",
+    tags: ["Frontend", "UI/UX", "AI"],
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "4",
+    title: "Unilodge Realty and Property Developers Limited",
+    description:
+      "Unilodge Realty and Property Developers Limited is an innovative consortium dedicated to solving Africa's most pressing challenges in housing, infrastructure, and energy.",
+    tech_stack: ["TypeScript", "Next.js"],
+    live_link: "https://www.unliodge.com.ng",
+    github_link: "https://github.com/Fedjosity/Unilodge",
+    image_url:
+      "https://unilodge-flame.vercel.app/_next/image?url=%2Fblog%2F5.jpg&w=3840&q=75",
+    tags: ["Frontend", "UI/UX", "AI"],
+    created_at: new Date().toISOString(),
+  },
+];
+
 export default function ProjectsPage() {
   const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([]);
   const [customProjects, setCustomProjects] = useState<CustomProject[]>([]);
@@ -59,17 +111,8 @@ export default function ProjectsPage() {
         setGithubRepos(repos);
         setFilteredRepos(repos);
 
-        // Fetch custom projects from Supabase
-        const { data: projects, error } = await supabase
-          .from("projects")
-          .select("*")
-          .order("created_at", { ascending: false });
-
-        if (error) {
-          console.error("Error fetching custom projects:", error);
-        } else {
-          setCustomProjects(projects || []);
-        }
+        // Set custom projects from local data
+        setCustomProjects(CUSTOM_PROJECTS);
       } catch (error) {
         console.error("Error fetching projects:", error);
       } finally {
@@ -88,7 +131,7 @@ export default function ProjectsPage() {
       filtered = filtered.filter(
         (repo) =>
           repo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          repo.description?.toLowerCase().includes(searchTerm.toLowerCase())
+          repo.description?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -118,7 +161,7 @@ export default function ProjectsPage() {
   }, [githubRepos, searchTerm, sortBy, filterTag]);
 
   const allLanguages = Array.from(
-    new Set(githubRepos.map((repo) => repo.language).filter(Boolean))
+    new Set(githubRepos.map((repo) => repo.language).filter(Boolean)),
   ).sort();
 
   if (loading) {
