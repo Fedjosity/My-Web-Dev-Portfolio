@@ -89,7 +89,20 @@ const CUSTOM_PROJECTS: CustomProject[] = [
     github_link: "https://github.com/Fedjosity/Unilodge",
     image_url:
       "https://unilodge-flame.vercel.app/_next/image?url=%2Fblog%2F5.jpg&w=3840&q=75",
-    tags: ["Frontend", "UI/UX", "AI"],
+    tags: ["Frontend", "UI/UX", "GSAP"],
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "5",
+    title: "Thank you card generator",
+    description:
+      "Thank you card generator is a tool for creating custom thank you cards for your loved ones.",
+    tech_stack: ["TypeScript", "React.js", "Tanstack", "Tailwind CSS"],
+    live_link: "https://revivar-web-app.vercel.app",
+    github_link: "https://github.com/Fedjosity/Revivar-web-app",
+    image_url:
+      "https://static.vecteezy.com/system/resources/thumbnails/012/199/389/small/thank-you-words-on-notepad-and-office-supplies-free-photo.jpg",
+    tags: ["Frontend", "API integration"],
     created_at: new Date().toISOString(),
   },
 ];
